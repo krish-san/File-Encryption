@@ -1,4 +1,4 @@
-// Function to encrypt file using password
+// Function to encrypt file
 function encryptFile() {
     var fileInput = document.getElementById('fname');
     var file = fileInput.files[0];
@@ -9,13 +9,13 @@ function encryptFile() {
     reader.onload = function(event) {
         var fileContent = event.target.result;
         var encryptedContent = CryptoJS.AES.encrypt(fileContent, password).toString();
-        downloadFile(encryptedContent, file.name + ".enc");
+        document.getElementById('download');
     };
 
     reader.readAsText(file);
 }
 
-// Function to decrypt file using password
+// Function to decrypt file
 function decryptFile() {
     var fileInput = document.getElementById('defname');
     var file = fileInput.files[0];
@@ -26,14 +26,16 @@ function decryptFile() {
     reader.onload = function(event) {
         var fileContent = event.target.result;
         var decryptedContent = CryptoJS.AES.decrypt(fileContent, password).toString(CryptoJS.enc.Utf8);
-        downloadFile(decryptedContent, file.name.replace(".enc", ""));
+        document.getElementById('download');
     };
 
     reader.readAsText(file);
 }
 
-// Function to download file
+//to download file
 function downloadFile(content, filename) {
+    var content = encryptedContent || decryptedContent;
+    var filename = encryptedContent ? document.getElementById('fname').files[0].name + ".enc" : document.getElementById('defname').files[0].name.replace(".enc", "");
     var blob = new Blob([content], { type: "text/plain" });
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -44,6 +46,7 @@ function downloadFile(content, filename) {
     window.URL.revokeObjectURL(url);
 }
 
-// Event listeners for encryption and decryption buttons
+//buttons
 document.querySelector('.inputen button').addEventListener('click', encryptFile);
 document.querySelector('.inputde button').addEventListener('click', decryptFile);
+document.getElementById('download').addEventListener('click', downloadContent);
